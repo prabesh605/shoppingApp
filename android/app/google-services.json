@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "98525623350",
+    "project_id": "myecommerceapp-cb1c6",
+    "storage_bucket": "myecommerceapp-cb1c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98525623350:android:15743e15f7f8646ae49497",
+        "android_client_info": {
+          "package_name": "com.broadway.ecommerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6dLMv6-lUC0IBZsMdunSjx9hVi_gJYLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98525623350:android:aa920c5494776795e49497",
+        "android_client_info": {
+          "package_name": "com.example.shopping_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6dLMv6-lUC0IBZsMdunSjx9hVi_gJYLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
