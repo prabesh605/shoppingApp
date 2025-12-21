@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/screen/admin_dashboard.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,7 +13,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Shopping")),
+      appBar: AppBar(
+        title: Text("Shopping"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AdminDashboard()));
+              },
+              icon: Icon(Icons.settings))
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
