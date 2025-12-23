@@ -100,29 +100,27 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () => getCategories(),
-        child: Expanded(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              final datas = categories[index];
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Image.network(datas.imgUrl, height: 90),
-                    Text(datas.name),
-                  ],
-                ),
-              );
-            },
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
           ),
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            final datas = categories[index];
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Image.network(datas.imgUrl, height: 90),
+                  Text(datas.name),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

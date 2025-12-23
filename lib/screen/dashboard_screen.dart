@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/firebase/firestore_service.dart';
+import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/admin_dashboard.dart';
+import 'package:shopping_app/screen/product_details.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -10,6 +13,22 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool isSelected = true;
+  FirestoreService service = FirestoreService();
+  List<ProductModel> products = [];
+
+  Future<void> getProducts() async {
+    final prod = await service.getProduct();
+    setState(() {
+      products = prod;
+    });
+  }
+
+  @override
+  void initState() {
+    getProducts();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,11 +36,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text("Shopping"),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AdminDashboard()));
-              },
-              icon: Icon(Icons.settings))
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminDashboard()),
+              );
+            },
+            icon: Icon(Icons.settings),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -62,38 +84,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
                   SizedBox(
-                    height: 700,
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      children: [
-                        CustomContainer(
-                          name: 'Shirt',
-                          url: 'assets/one.jpg',
-                          price: '500',
-                        ),
-                        CustomContainer(
-                          name: 'Shirt',
-                          url: 'assets/one.jpg',
-                          price: '500',
-                        ),
-                        CustomContainer(
-                          name: 'Shirt',
-                          url: 'assets/one.jpg',
-                          price: '500',
-                        ),
-                        CustomContainer(
-                          name: 'Shirt',
-                          url: 'assets/one.jpg',
-                          price: '500',
-                        ),
-                        CustomContainer(
-                          name: 'Shirt',
-                          url: 'assets/one.jpg',
-                          price: '500',
-                        ),
-                      ],
+                    height: 500,
+                    child: GridView.builder(
+                      itemCount: products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductDetails(product: product),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.green),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              children: [
+                                Image.network(product.imgUrl, height: 100),
+                                Text(product.name),
+                                Text("${product.price}"),
+                                Text(product.description),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
