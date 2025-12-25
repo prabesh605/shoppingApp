@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
 
@@ -7,6 +8,8 @@ class FirestoreService {
       .collection("category");
   final CollectionReference productCollection = FirebaseFirestore.instance
       .collection("product");
+  final CollectionReference cartCollection = FirebaseFirestore.instance
+      .collection("cart");
   Future<void> addCategory(CategoryModel data) async {
     try {
       await categoryCollection.add(data.toJson());
@@ -18,6 +21,14 @@ class FirestoreService {
   Future<void> addProduct(ProductModel data) async {
     try {
       await productCollection.add(data.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> addToCart(CartModel data) async {
+    try {
+      await cartCollection.add(data.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }
