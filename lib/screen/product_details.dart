@@ -140,13 +140,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () {
                   final data = CartModel(
-                    productId: widget.product.id,
-                    productName: widget.product.name,
-                    categoryName: widget.product.categoryId,
                     categoryId: widget.product.categoryId,
                     count: count,
-                    totalAmount: total,
+
                     userId: "prabesh1",
+                    name: widget.product.name,
+                    imgUrl: widget.product.imgUrl,
+                    price: widget.product.price,
+                    description: widget.product.description,
                   );
                   service.addToCart(data);
                 },

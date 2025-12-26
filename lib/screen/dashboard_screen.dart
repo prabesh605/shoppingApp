@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/admin_dashboard.dart';
+import 'package:shopping_app/screen/cart_screen.dart';
 import 'package:shopping_app/screen/product_details.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -35,6 +36,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: Text("Shopping"),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CartScreen()),
+              );
+            },
+            icon: Icon(Icons.shopping_cart),
+          ),
+          SizedBox(width: 20),
           IconButton(
             onPressed: () {
               Navigator.push(
@@ -106,6 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                           child: Container(
+                            margin: EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.green),
                               borderRadius: BorderRadius.circular(12),

@@ -1,0 +1,171 @@
+import 'package:flutter/material.dart';
+import 'package:shopping_app/firebase/firestore_service.dart';
+import 'package:shopping_app/model/cart_model.dart';
+import 'package:shopping_app/model/product_model.dart';
+import 'package:shopping_app/screen/product_details.dart';
+
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  FirestoreService service = FirestoreService();
+  List<CartModel> carts = [];
+  // int count = 1;
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  Future<void> getData() async {
+    final ct = await service.getCart();
+    setState(() {
+      carts = ct;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double totalAmount = carts.fold(
+      0.0,
+      (prev, current) => prev + current.count * current.price,
+    );
+    return Scaffold(
+      appBar: AppBar(title: Text("MyCart")),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: carts.length,
+              itemBuilder: (context, index) {
+                final cart = carts[index];
+                // count = cart.count;
+                return GestureDetector(
+                  onTap: () {
+                    final data = ProductModel(
+                      id: "",
+                      name: cart.name,
+                      imgUrl: cart.imgUrl,
+                      categoryId: cart.categoryId,
+                      price: cart.price,
+                      description: cart.description,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetails(product: data),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.network(cart.imgUrl, height: 80),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(cart.name),
+                                  // Align(
+                                  //   alignment: Alignment.centerRight,
+                                  //   child: IconButton(
+                                  //     onPressed: () {},
+                                  //     icon: Icon(Icons.delete, color: Colors.red),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Text(cart.description),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Rs. ${cart.count * cart.price}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(width: 40),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        child: IconButton(
+                                          onPressed: () {
+                                            // if (count > 0) {
+                                            //   setState(() {
+                                            //     count--;
+                                            //   });
+                                            // }
+                                          },
+                                          icon: Icon(Icons.remove),
+                                        ),
+                                      ),
+                                      SizedBox(width: 20),
+                                      // Text("$count"),
+                                      Text("${cart.count}"),
+                                      SizedBox(width: 20),
+                                      CircleAvatar(
+                                        child: IconButton(
+                                          onPressed: () {
+                                            // if (count < 10) {
+                                            //   setState(() {
+                                            //     count++;
+                                            //   });
+                                            // }
+                                          },
+                                          icon: Icon(Icons.add),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(12),
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "Total Amount: Rs. $totalAmount",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+          ),
+          // SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {},
+            child: Text("Order", style: TextStyle(color: Colors.white)),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+}

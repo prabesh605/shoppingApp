@@ -67,4 +67,21 @@ class FirestoreService {
       throw Exception(e.toString());
     }
   }
+
+  Future<List<CartModel>> getCart() async {
+    try {
+      final data = await cartCollection.get();
+      final List<CartModel> carts = data.docs
+          .map(
+            (docs) => CartModel.fromJson(
+              docs.data() as Map<String, dynamic>,
+              id: docs.id,
+            ),
+          )
+          .toList();
+      return carts;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }
