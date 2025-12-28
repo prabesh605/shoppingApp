@@ -15,6 +15,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool isSelected = true;
   FirestoreService service = FirestoreService();
+
   List<ProductModel> products = [];
 
   Future<void> getProducts() async {
