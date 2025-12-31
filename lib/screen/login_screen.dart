@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/screen/dashboard_screen.dart';
 import 'package:shopping_app/screen/signup_screen.dart';
+import 'package:shopping_app/service/user_role_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,11 +15,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> formState = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  Future<void> signUp() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+  UserRoleService userRoleService = UserRoleService();
+  Future<User?> login() async {
+    try {
+      final data = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      User? users = data.user;
+      // print(data);
+      return users;
+    } catch (e) {
+      throw Exception(e.toString());
+      // print(e.toString());
+    }
   }
 
   @override
@@ -62,14 +72,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    signUp();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DashboardScreen(),
-                      ),
-                    );
+                  onPressed: () async {
+                    try {
+                      final User? user = await login();
+                      if (user!.uid.isNotEmpty) {
+                        final String role =
+                            await userRoleService.getUserRole() ?? "";
+                        if (role.isNotEmpty || role != null) {
+                          print(role);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(role: role),
+                            ),
+                          );
+                        }
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
                   },
                   child: Text("Login"),
                 ),

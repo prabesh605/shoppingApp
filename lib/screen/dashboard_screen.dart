@@ -1,12 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
+import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/admin_dashboard.dart';
 import 'package:shopping_app/screen/cart_screen.dart';
+import 'package:shopping_app/screen/login_screen.dart';
 import 'package:shopping_app/screen/product_details.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  const DashboardScreen({super.key, required this.role});
+  final String role;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -17,6 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   FirestoreService service = FirestoreService();
 
   List<ProductModel> products = [];
+  List<CategoryModel> categories = [];
 
   Future<void> getProducts() async {
     final prod = await service.getProduct();
@@ -25,10 +30,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
+  Future<void> getCategories() async {
+    final ct = await service.getCategory();
+    setState(() {
+      categories = ct;
+    });
+  }
+
   @override
   void initState() {
     getProducts();
+    getCategories();
     super.initState();
+  }
+
+  Future<void> logout() async {
+    FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -39,22 +56,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
+              logout();
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => CartScreen()),
+                MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.logout),
+          ),
+
+          Visibility(
+            visible: widget.role == 'admin' ? false : true,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartScreen()),
+                );
+              },
+              icon: Icon(Icons.shopping_cart),
+            ),
           ),
           SizedBox(width: 20),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminDashboard()),
-              );
-            },
-            icon: Icon(Icons.settings),
+          Visibility(
+            visible: widget.role == 'admin' ? true : false,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminDashboard()),
+                );
+              },
+              icon: Icon(Icons.settings),
+            ),
           ),
         ],
       ),
@@ -71,6 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
             ),
+
             Container(
               padding: EdgeInsets.all(8),
               child: Column(
@@ -78,24 +113,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(
                     height: 50,
                     width: 1000,
-                    child: ListView(
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        TrendingWidget(
-                          isSelected: isSelected,
-                          name: "Trending",
-                        ),
-                        SizedBox(width: 10),
-                        TrendingWidget(isSelected: false, name: "Shoes"),
-                        SizedBox(width: 10),
-                        TrendingWidget(isSelected: false, name: "SweatShirts"),
-                        SizedBox(width: 10),
-                        TrendingWidget(isSelected: false, name: "Shirts"),
-                        SizedBox(width: 10),
-                        TrendingWidget(isSelected: false, name: "Bags"),
-                      ],
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        final category = categories[index];
+                        return TrendingWidget(
+                          isSelected: false,
+                          name: category.name,
+                        );
+                      },
                     ),
                   ),
+                  // SizedBox(
+                  //   height: 50,
+                  //   width: 1000,
+                  //   child: ListView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     children: [
+                  //       TrendingWidget(
+                  //         isSelected: isSelected,
+                  //         name: "Trending",
+                  //       ),
+                  //       SizedBox(width: 10),
+                  //       TrendingWidget(isSelected: false, name: "Shoes"),
+                  //       SizedBox(width: 10),
+                  //       TrendingWidget(isSelected: false, name: "SweatShirts"),
+                  //       SizedBox(width: 10),
+                  //       TrendingWidget(isSelected: false, name: "Shirts"),
+                  //       SizedBox(width: 10),
+                  //       TrendingWidget(isSelected: false, name: "Bags"),
+                  //     ],
+                  //   ),
+                  // ),
                   SizedBox(height: 20),
                   SizedBox(
                     height: 500,
@@ -190,6 +240,7 @@ class TrendingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 4),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,

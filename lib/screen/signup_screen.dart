@@ -72,10 +72,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       registerUser();
+                      
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DashboardScreen(),
+                          builder: (context) => DashboardScreen(role: 'user'),
                         ),
                       );
                     }
