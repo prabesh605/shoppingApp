@@ -29,16 +29,25 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Up")),
-      body: SafeArea(
+      // appBar: AppBar(title: Text("Sign Up")),
+      body: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.blueGrey],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Form(
           key: formKey,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 20),
-                Image.asset("assets/five.jpg", height: 150),
+                Image.asset("assets/shopLogo.png", height: 150),
                 SizedBox(height: 20),
                 TextFormField(
                   controller: emailController,
@@ -72,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       registerUser();
-                      
+
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

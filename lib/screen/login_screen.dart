@@ -34,84 +34,90 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: formState,
-            child: Column(
-              children: [
-                Image.asset("assets/five.jpg", height: 150),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    label: Text("Email"),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Email is required';
-                    }
-                    return null;
-                  },
+      body: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.blueGrey],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Form(
+          key: formState,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/shopLogo.png", height: 150),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  label: Text("Email"),
+                  border: OutlineInputBorder(),
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    label: Text("Password"),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Password is Required";
-                    }
-                    return null;
-                  },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Email is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  label: Text("Password"),
+                  border: OutlineInputBorder(),
                 ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final User? user = await login();
-                      if (user!.uid.isNotEmpty) {
-                        final String role =
-                            await userRoleService.getUserRole() ?? "";
-                        if (role.isNotEmpty || role != null) {
-                          print(role);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DashboardScreen(role: role),
-                            ),
-                          );
-                        }
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Password is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final User? user = await login();
+                    if (user!.uid.isNotEmpty) {
+                      final String role =
+                          await userRoleService.getUserRole() ?? "";
+                      if (role.isNotEmpty || role != null) {
+                        print(role);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DashboardScreen(role: role),
+                          ),
+                        );
                       }
-                    } catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(e.toString())));
                     }
-                  },
-                  child: Text("Login"),
-                ),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  } catch (e) {
+                    ScaffoldMessenger.of(
                       context,
-                      MaterialPageRoute(builder: (context) => SignupScreen()),
-                    );
-                  },
-                  child: Text(
-                    "Signup to create new Account",
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
+                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                  }
+                },
+                child: Text("Login"),
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                  );
+                },
+                child: Text(
+                  "Signup to create new Account",
+                  style: TextStyle(decoration: TextDecoration.underline),
                 ),
-                SizedBox(height: 20),
-              ],
-            ),
+              ),
+              SizedBox(height: 20),
+            ],
           ),
         ),
       ),

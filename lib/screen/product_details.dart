@@ -150,6 +150,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     description: widget.product.description,
                   );
                   service.addToCart(data);
+                  Navigator.pop(context);
                 },
                 child: Text(
                   "Add to Cart",

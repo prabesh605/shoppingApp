@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/category_model.dart';
+import 'package:shopping_app/model/order_model.dart';
 import 'package:shopping_app/model/product_model.dart';
 
 class FirestoreService {
@@ -10,6 +12,10 @@ class FirestoreService {
       .collection("product");
   final CollectionReference cartCollection = FirebaseFirestore.instance
       .collection("cart");
+  final CollectionReference userCollection = FirebaseFirestore.instance
+      .collection("Users");
+  final CollectionReference orderCollection = FirebaseFirestore.instance
+      .collection("order");
   Future<void> addCategory(CategoryModel data) async {
     try {
       await categoryCollection.add(data.toJson());
@@ -28,7 +34,17 @@ class FirestoreService {
 
   Future<void> addToCart(CartModel data) async {
     try {
-      await cartCollection.add(data.toJson());
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await userCollection.doc(uid).collection("cart").add(data.toJson());
+      // await cartCollection.add(data.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> addOrder(OrderModel data) async {
+    try {
+      await orderCollection.add(data.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -70,16 +86,23 @@ class FirestoreService {
 
   Future<List<CartModel>> getCart() async {
     try {
-      final data = await cartCollection.get();
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final data = await userCollection.doc(uid).collection("cart").get();
+      // final data = await cartCollection.get();
       final List<CartModel> carts = data.docs
-          .map(
-            (docs) => CartModel.fromJson(
-              docs.data() as Map<String, dynamic>,
-              id: docs.id,
-            ),
-          )
+          .map((docs) => CartModel.fromJson(docs.data(), id: docs.id))
           .toList();
       return carts;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<OrderModel>> getOrder() async {
+    try {
+      final data = await orderCollection.get();
+      final orders = data.docs.map((e) => OrderModel.fromJson(e)).toList();
+      return orders;
     } catch (e) {
       throw Exception(e.toString());
     }

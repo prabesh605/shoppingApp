@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
+import 'package:shopping_app/model/order_model.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/product_details.dart';
 
@@ -14,10 +16,12 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   FirestoreService service = FirestoreService();
   List<CartModel> carts = [];
+  String? userId;
   // int count = 1;
   @override
   void initState() {
     getData();
+    getCurrentUserID();
     super.initState();
   }
 
@@ -26,6 +30,11 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {
       carts = ct;
     });
+  }
+
+  Future<void> getCurrentUserID() async {
+    userId = await FirebaseAuth.instance.currentUser!.uid;
+    print(userId);
   }
 
   @override
@@ -160,7 +169,18 @@ class _CartScreenState extends State<CartScreen> {
           // SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {},
+            onPressed: () {
+              final order = OrderModel(
+                id: '',
+                userId: "$userId",
+                totalAmount: totalAmount,
+                status: "Pending",
+                createdDate: DateTime.now(),
+                items: carts,
+              );
+              service.addOrder(order);
+              Navigator.pop(context);
+            },
             child: Text("Order", style: TextStyle(color: Colors.white)),
           ),
           SizedBox(height: 20),
