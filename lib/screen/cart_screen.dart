@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/order_model.dart';
@@ -17,19 +18,32 @@ class _CartScreenState extends State<CartScreen> {
   FirestoreService service = FirestoreService();
   List<CartModel> carts = [];
   String? userId;
+  String? userEmail;
   // int count = 1;
   @override
   void initState() {
     getData();
     getCurrentUserID();
+    getUserEmail();
     super.initState();
   }
 
   Future<void> getData() async {
     final ct = await service.getCart();
+
     setState(() {
       carts = ct;
     });
+  }
+
+  Future<void> getUserEmail() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      userEmail = prefs.getString("email");
+      print("Email is $userEmail");
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<void> getCurrentUserID() async {
@@ -173,6 +187,7 @@ class _CartScreenState extends State<CartScreen> {
               final order = OrderModel(
                 id: '',
                 userId: "$userId",
+                email: "$userEmail",
                 totalAmount: totalAmount,
                 status: "Pending",
                 createdDate: DateTime.now(),

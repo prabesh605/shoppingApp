@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_app/screen/dashboard_screen.dart';
 import 'package:shopping_app/screen/signup_screen.dart';
 import 'package:shopping_app/service/user_role_service.dart';
@@ -16,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   UserRoleService userRoleService = UserRoleService();
+
   Future<User?> login() async {
     try {
       final data = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -23,12 +25,21 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       User? users = data.user;
+      saveUserEmail(users?.email ?? "");
+
+      print(users?.email);
+
       // print(data);
       return users;
     } catch (e) {
       throw Exception(e.toString());
       // print(e.toString());
     }
+  }
+
+  Future<void> saveUserEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("email", email);
   }
 
   @override

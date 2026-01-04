@@ -4,6 +4,7 @@ import 'package:shopping_app/model/cart_model.dart';
 class OrderModel {
   final String id;
   final String userId;
+  final String email;
   final double totalAmount;
   final String status;
   final DateTime createdDate;
@@ -12,6 +13,7 @@ class OrderModel {
   OrderModel({
     required this.id,
     required this.userId,
+    required this.email,
     required this.totalAmount,
     required this.status,
     required this.createdDate,
@@ -22,9 +24,10 @@ class OrderModel {
     return OrderModel(
       id: doc.id,
       userId: data['userId'],
+      email: data['email'],
       totalAmount: (data['totalAmount'] as num).toDouble(),
       status: data['status'],
-      createdDate: (data['createdDate'] as Timestamp).toDate(),
+      createdDate: (data['createdAt'] as Timestamp).toDate(),
       items: (doc['items'] as List)
           .map((e) => CartModel.fromJson(e, id: doc.id))
           .toList(),
@@ -34,6 +37,7 @@ class OrderModel {
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
+      'email': email,
       'totalAmount': totalAmount,
       'status': status,
       'createdAt': Timestamp.fromDate(createdDate),
