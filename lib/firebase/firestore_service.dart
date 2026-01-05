@@ -98,6 +98,28 @@ class FirestoreService {
     }
   }
 
+  Future<void> removeCartById(String docId) async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await userCollection.doc(uid).collection('cart').doc(docId).delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> removeCart() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      var collection = userCollection.doc(uid).collection('cart');
+      var snapshots = await collection.get();
+      for (var doc in snapshots.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<List<OrderModel>> getOrder() async {
     try {
       final data = await orderCollection.get();

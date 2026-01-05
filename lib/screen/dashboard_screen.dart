@@ -23,11 +23,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<ProductModel> products = [];
   List<CategoryModel> categories = [];
+  List<ProductModel> filterProduct = [];
+  String selectedCategory = '';
 
   Future<void> getProducts() async {
     final prod = await service.getProduct();
     setState(() {
       products = prod;
+      filterProduct = prod;
     });
   }
 
@@ -35,6 +38,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final ct = await service.getCategory();
     setState(() {
       categories = ct;
+    });
+  }
+
+  void filterProductByCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+      if (category.isEmpty) {
+        filterProduct = products;
+      } else {
+        filterProduct = products
+            .where((product) => product.categoryId == category)
+            .toList();
+      }
     });
   }
 
@@ -125,9 +141,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       itemCount: categories.length,
                       itemBuilder: (context, index) {
                         final category = categories[index];
-                        return TrendingWidget(
-                          isSelected: false,
-                          name: category.name,
+                        return GestureDetector(
+                          onTap: () {
+                            filterProductByCategory(category.id);
+                          },
+                          child: TrendingWidget(
+                            isSelected: false,
+                            name: category.name,
+                          ),
                         );
                       },
                     ),
@@ -157,13 +178,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(
                     height: 500,
                     child: GridView.builder(
-                      itemCount: products.length,
+                      itemCount: filterProduct.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                           ),
                       itemBuilder: (context, index) {
-                        final product = products[index];
+                        final product = filterProduct[index];
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(

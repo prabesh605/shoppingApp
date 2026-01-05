@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/screen/dashboard_screen.dart';
 import 'package:shopping_app/screen/login_screen.dart';
+import 'package:shopping_app/screen/navigation_bar.dart';
 import 'package:shopping_app/service/user_role_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,7 +29,10 @@ class _SplashScreenState extends State<SplashScreen> {
     if (role == 'admin' || role == 'user') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardScreen(role: role)),
+        MaterialPageRoute(
+          builder: (context) => NavigationScreen(role: role),
+          // DashboardScreen(role: role)
+        ),
       );
     } else {
       Navigator.pushReplacement(

@@ -58,7 +58,18 @@ class _CartScreenState extends State<CartScreen> {
       (prev, current) => prev + current.count * current.price,
     );
     return Scaffold(
-      appBar: AppBar(title: Text("MyCart")),
+      appBar: AppBar(
+        title: Text("MyCart"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await service.removeCart();
+              getData();
+            },
+            icon: Icon(Icons.delete, color: Colors.red),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -104,13 +115,20 @@ class _CartScreenState extends State<CartScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(cart.name),
-                                  // Align(
-                                  //   alignment: Alignment.centerRight,
-                                  //   child: IconButton(
-                                  //     onPressed: () {},
-                                  //     icon: Icon(Icons.delete, color: Colors.red),
-                                  //   ),
-                                  // ),
+                                  SizedBox(width: 130),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        service.removeCartById(cart.id ?? '');
+                                        getData();
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                               Text(cart.description),
@@ -183,7 +201,7 @@ class _CartScreenState extends State<CartScreen> {
           // SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {
+            onPressed: () async {
               final order = OrderModel(
                 id: '',
                 userId: "$userId",
@@ -193,7 +211,8 @@ class _CartScreenState extends State<CartScreen> {
                 createdDate: DateTime.now(),
                 items: carts,
               );
-              service.addOrder(order);
+              await service.addOrder(order);
+              await service.removeCart();
               Navigator.pop(context);
             },
             child: Text("Order", style: TextStyle(color: Colors.white)),
