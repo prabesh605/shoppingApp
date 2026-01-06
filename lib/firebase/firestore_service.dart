@@ -129,4 +129,16 @@ class FirestoreService {
       throw Exception(e.toString());
     }
   }
+
+  Future<List<OrderModel>> getMyOrder() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final data = await orderCollection.get();
+      final value = data.docs.where((e) => e['userId'] == uid);
+      final result = value.map((e) => OrderModel.fromJson(e)).toList();
+      return result;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

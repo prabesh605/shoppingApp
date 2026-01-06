@@ -74,32 +74,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.2),
       appBar: AppBar(
+        backgroundColor: Colors.blue.withOpacity(0.2),
         title: Text("Shopping"),
         actions: [
-          IconButton(
-            onPressed: () {
-              logout();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-            icon: Icon(Icons.logout),
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: Icon(Icons.person),
           ),
+          // IconButton(
+          //   onPressed: () {
+          //     logout();
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => LoginScreen()),
+          //     );
+          //   },
+          //   icon: Icon(Icons.logout),
+          // ),
 
-          Visibility(
-            visible: widget.role == 'admin' ? false : true,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CartScreen()),
-                );
-              },
-              icon: Icon(Icons.shopping_cart),
-            ),
-          ),
+          // Visibility(
+          //   visible: widget.role == 'admin' ? false : true,
+          //   child: IconButton(
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => CartScreen()),
+          //       );
+          //     },
+          //     icon: Icon(Icons.shopping_cart),
+          //   ),
+          // ),
           SizedBox(width: 20),
           Visibility(
             visible: widget.role == 'admin' ? true : false,
@@ -115,6 +122,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(child: Image.asset("assets/shopLogo.png")),
+            Expanded(
+              child: Column(
+                children: [
+                  ListTile(leading: Icon(Icons.home), title: Text("Home")),
+                  ListTile(leading: Icon(Icons.person), title: Text("Profile")),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text("Settings"),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      logout();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    leading: Icon(Icons.logout),
+                    title: Text("Logout"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -123,6 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
                   label: Text("Search products"),
                   border: OutlineInputBorder(),
                 ),
@@ -176,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   // ),
                   SizedBox(height: 20),
                   SizedBox(
-                    height: 500,
+                    height: 1000,
                     child: GridView.builder(
                       itemCount: filterProduct.length,
                       gridDelegate:
@@ -203,7 +241,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             child: Column(
                               children: [
-                                Image.network(product.imgUrl, height: 100),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 100,
+                                  width: 180,
+                                  child: Image.network(
+                                    product.imgUrl,
+
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                                 Text(product.name),
                                 Text("${product.price}"),
                                 Text(product.description),
@@ -241,12 +290,13 @@ class CustomContainer extends StatelessWidget {
       children: [
         Container(
           height: 150,
+          width: 150,
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             // border: Border.all(),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Image.asset(url),
+          child: Image.asset(url, fit: BoxFit.contain),
         ),
         Text(name),
         Text("Rs$price"),
@@ -271,13 +321,13 @@ class TrendingWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 4),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.black : Colors.white,
+        color: isSelected ? Colors.black : Colors.blueAccent,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(),
+        border: Border.all(color: Colors.white),
       ),
       child: Text(
         name,
-        style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+        style: TextStyle(color: isSelected ? Colors.white : Colors.white),
       ),
     );
   }

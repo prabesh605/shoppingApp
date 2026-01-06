@@ -47,7 +47,15 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.blueAccent,
       body: SafeArea(
-        child: Center(child: Column(children: [Text("Welcome to MyShop")])),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/shopLogo.png"),
+              Text("Welcome to MyShop"),
+            ],
+          ),
+        ),
       ),
     );
   }

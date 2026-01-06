@@ -32,9 +32,12 @@ class _NavigationScreenState extends State<NavigationScreen> {
       body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.black,
+
+        unselectedItemColor: Colors.white,
         backgroundColor: Colors.blue,
         currentIndex: selectedIndex,
         onTap: onItemTapped,
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.white),
