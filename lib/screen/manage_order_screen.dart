@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/order_model.dart';
-import 'package:shopping_app/screen/order_detail_page.dart';
+import 'package:shopping_app/screen/admin_module/order_detail_page.dart';
 
 class ManageOrderScreen extends StatefulWidget {
   const ManageOrderScreen({super.key});

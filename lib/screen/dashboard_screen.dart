@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
-import 'package:shopping_app/screen/admin_dashboard.dart';
+import 'package:shopping_app/screen/admin_module/admin_dashboard.dart';
 import 'package:shopping_app/screen/cart_screen.dart';
 import 'package:shopping_app/screen/login_screen.dart';
 import 'package:shopping_app/screen/product_details.dart';
@@ -84,6 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             backgroundColor: Colors.blue,
             child: Icon(Icons.person),
           ),
+
           // IconButton(
           //   onPressed: () {
           //     logout();
@@ -94,17 +95,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           //   },
           //   icon: Icon(Icons.logout),
           // ),
-
           // Visibility(
           //   visible: widget.role == 'admin' ? false : true,
           //   child: IconButton(
           //     onPressed: () {
           //       Navigator.push(
           //         context,
-          //         MaterialPageRoute(builder: (context) => CartScreen()),
+          //         MaterialPageRoute(builder: (context) => AdminDashboard()),
           //       );
           //     },
-          //     icon: Icon(Icons.shopping_cart),
+          //     icon: Icon(Icons.admin_panel_settings),
           //   ),
           // ),
           SizedBox(width: 20),

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopping_app/screen/admin_module/admin_navigation_bar.dart';
 import 'package:shopping_app/screen/dashboard_screen.dart';
+import 'package:shopping_app/screen/navigation_bar.dart';
 import 'package:shopping_app/screen/signup_screen.dart';
 import 'package:shopping_app/service/user_role_service.dart';
 
@@ -97,13 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       final String role =
                           await userRoleService.getUserRole() ?? "";
                       if (role.isNotEmpty || role != null) {
-                        print(role);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DashboardScreen(role: role),
-                          ),
-                        );
+                        // print(role);
+                        role == 'admin'
+                            ? Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AdminNavigationBar(role: role),
+                                ),
+                              )
+                            : Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      NavigationScreen(role: role),
+                                ),
+                              );
                       }
                     }
                   } catch (e) {

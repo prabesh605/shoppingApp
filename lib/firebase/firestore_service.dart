@@ -130,6 +130,14 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateOrder(OrderModel order) async {
+    try {
+      await orderCollection.doc(order.id).update(order.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<List<OrderModel>> getMyOrder() async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;

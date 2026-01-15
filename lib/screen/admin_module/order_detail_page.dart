@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/order_model.dart';
 
@@ -11,10 +12,38 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
+  FirestoreService service = FirestoreService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Order Detail")),
+      appBar: AppBar(
+        title: Text("Order Detail"),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              final order = OrderModel(
+                id: widget.orders.id,
+                userId: widget.orders.userId,
+                email: widget.orders.email,
+                totalAmount: widget.orders.totalAmount,
+                status: "Complete",
+                createdDate: widget.orders.createdDate,
+                items: widget.orders.items,
+              );
+              service.updateOrder(order);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Order updated"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              // widget.orders.status;
+            },
+            child: Text("Update"),
+          ),
+          SizedBox(width: 10),
+        ],
+      ),
       body: ListView.builder(
         itemCount: widget.orders.items.length,
         itemBuilder: (context, index) {

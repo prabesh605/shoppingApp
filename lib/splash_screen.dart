@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/screen/admin_module/admin_navigation_bar.dart';
 import 'package:shopping_app/screen/dashboard_screen.dart';
 import 'package:shopping_app/screen/login_screen.dart';
 import 'package:shopping_app/screen/navigation_bar.dart';
@@ -27,13 +28,21 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> handleUser() async {
     final role = await UserRoleService().getUserRole() ?? "";
     if (role == 'admin' || role == 'user') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NavigationScreen(role: role),
-          // DashboardScreen(role: role)
-        ),
-      );
+      role == 'admin'
+          ? Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminNavigationBar(role: role),
+                // DashboardScreen(role: role)
+              ),
+            )
+          : Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavigationScreen(role: role),
+                // DashboardScreen(role: role)
+              ),
+            );
     } else {
       Navigator.pushReplacement(
         context,
