@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
+import 'package:shopping_app/service/upload_image.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -13,6 +14,7 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final FirestoreService service = FirestoreService();
+  final UploadService uploadService = UploadService();
   List<CategoryModel> categories = [];
   List<ProductModel> products = [];
   CategoryModel? selectedCategory;
@@ -72,17 +74,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  controller: imgController,
-                  decoration: InputDecoration(
-                    label: Text("imgUrl"),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Image is required';
-                    }
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: imgController,
+                        decoration: InputDecoration(
+                          label: Text("imgUrl"),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Image is required';
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final data = await uploadService.pickImage();
+                        print("Response: $data");
+                        imgController.text = data ?? "";
+                      },
+                      child: Text("Upload"),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
                 // TextFormField(
