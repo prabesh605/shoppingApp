@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_app/screen/admin_module/admin_navigation_bar.dart';
-import 'package:shopping_app/screen/dashboard_screen.dart';
-import 'package:shopping_app/screen/navigation_bar.dart';
+import 'package:shopping_app/screen/user_module/dashboard_screen.dart';
+import 'package:shopping_app/screen/user_module/navigation_bar.dart';
 import 'package:shopping_app/screen/signup_screen.dart';
 import 'package:shopping_app/service/user_role_service.dart';
 

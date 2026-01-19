@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/bloc/category_bloc/category_bloc.dart';
+import 'package:shopping_app/bloc/category_bloc/category_event.dart';
+import 'package:shopping_app/bloc/category_bloc/category_state.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/category_model.dart';
 
@@ -11,20 +15,21 @@ class AddCategoryScreen extends StatefulWidget {
 
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
   FirestoreService service = FirestoreService();
-  List<CategoryModel> categories = [];
+  // List<CategoryModel> categories = [];
 
   @override
   void initState() {
-    getCategories();
+    // getCategories();
+    context.read<CategoryBloc>().add(GetCategory());
     super.initState();
   }
 
-  Future<void> getCategories() async {
-    final cat = await service.getCategory();
-    setState(() {
-      categories = cat;
-    });
-  }
+  // Future<void> getCategories() async {
+  //   final cat = await service.getCategory();
+  //   setState(() {
+  //     categories = cat;
+  //   });
+  // }
 
   void showAddProductBottonSheet(context) {
     final nameController = TextEditingController();
@@ -71,7 +76,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   if (name.isEmpty || imageUrl.isEmpty) {
                     print("Enter data");
                   } else {
-                    service.addCategory(data);
+                    context.read<CategoryBloc>().add(AddCategory(data));
+                    // service.addCategory(data);
                   }
                   Navigator.pop(context);
                 },
@@ -98,30 +104,40 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
         },
         child: Text("Add"),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => getCategories(),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-          ),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final datas = categories[index];
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green),
-                borderRadius: BorderRadius.circular(12),
+      body: BlocBuilder<CategoryBloc, CategoryState>(
+        builder: (context, state) {
+          if (state is CategoryLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state is CategoryError) {
+            return Center(child: Text("Error"));
+          }
+          if (state is CategoryLoaded) {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
               ),
-              child: Column(
-                children: [
-                  Image.network(datas.imgUrl, height: 90),
-                  Text(datas.name),
-                ],
-              ),
+              itemCount: state.categories.length,
+              itemBuilder: (context, index) {
+                final datas = state.categories[index];
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Image.network(datas.imgUrl, height: 90),
+                      Text(datas.name),
+                    ],
+                  ),
+                );
+              },
             );
-          },
-        ),
+          }
+          return Container();
+        },
       ),
     );
   }

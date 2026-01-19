@@ -5,7 +5,7 @@ import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/order_model.dart';
 import 'package:shopping_app/model/product_model.dart';
-import 'package:shopping_app/screen/product_details.dart';
+import 'package:shopping_app/screen/user_module/product_details.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});

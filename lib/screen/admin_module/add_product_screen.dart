@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/bloc/category_bloc/category_bloc.dart';
+import 'package:shopping_app/bloc/category_bloc/category_event.dart';
+import 'package:shopping_app/bloc/category_bloc/category_state.dart';
+import 'package:shopping_app/bloc/product_bloc/product_bloc.dart';
+import 'package:shopping_app/bloc/product_bloc/product_event.dart';
+import 'package:shopping_app/bloc/product_bloc/product_state.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
@@ -13,32 +20,34 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final FirestoreService service = FirestoreService();
+  // final FirestoreService service = FirestoreService();
   final UploadService uploadService = UploadService();
-  List<CategoryModel> categories = [];
-  List<ProductModel> products = [];
+  // List<CategoryModel> categories = [];
+  // List<ProductModel> products = [];
   CategoryModel? selectedCategory;
   @override
   void initState() {
-    getCategories();
-    getProducts();
+    context.read<CategoryBloc>().add(GetCategory());
+    context.read<ProductBloc>().add(GetProduct());
+    // getCategories();
+    // getProducts();
     super.initState();
   }
 
-  Future<void> getCategories() async {
-    final cat = await service.getCategory();
-    setState(() {
-      categories = cat;
-      selectedCategory == cat.first;
-    });
-  }
+  // Future<void> getCategories() async {
+  //   final cat = await service.getCategory();
+  //   setState(() {
+  //     categories = cat;
+  //     selectedCategory == cat.first;
+  //   });
+  // }
 
-  Future<void> getProducts() async {
-    final prod = await service.getProduct();
-    setState(() {
-      products = prod;
-    });
-  }
+  // Future<void> getProducts() async {
+  //   final prod = await service.getProduct();
+  //   setState(() {
+  //     products = prod;
+  //   });
+  // }
 
   void showAddProductBottomSheet() {
     final nameController = TextEditingController();
@@ -108,20 +117,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 //     border: OutlineInputBorder(),
                 //   ),
                 // ),
-                DropdownButtonFormField<CategoryModel>(
-                  decoration: InputDecoration(border: OutlineInputBorder()),
-                  initialValue: selectedCategory,
-                  value: selectedCategory,
-                  items: categories.map((category) {
-                    return DropdownMenuItem<CategoryModel>(
-                      value: category,
-                      child: Text(category.name),
-                    );
-                  }).toList(),
-                  onChanged: (CategoryModel? value) {
-                    setState(() {
-                      selectedCategory = value;
-                    });
+                BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                    if (state is CategoryLoaded) {
+                      return DropdownButtonFormField<CategoryModel>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        // initialValue: selectedCategory,
+                        value: selectedCategory,
+                        items: state.categories.map((category) {
+                          return DropdownMenuItem<CategoryModel>(
+                            value: category,
+                            child: Text(category.name),
+                          );
+                        }).toList(),
+                        onChanged: (CategoryModel? value) {
+                          setState(() {
+                            selectedCategory = value;
+                          });
+                        },
+                      );
+                    }
+                    return Container();
                   },
                 ),
                 SizedBox(height: 20),
@@ -168,7 +186,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         price: double.parse(price),
                         description: description,
                       );
-                      service.addProduct(data);
+                      context.read<ProductBloc>().add(AddProduct(data));
+                      // service.addProduct(data);
                       Navigator.pop(context);
                     }
                   },
@@ -194,27 +213,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
         },
         child: Text("Add"),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => getProducts(),
-        child: GridView.builder(
-          itemCount: products.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          ),
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return Container(
-              child: Column(
-                children: [
-                  Image.network(product.imgUrl, height: 100),
-                  Text(product.name),
-                  Text("${product.price}"),
-                  Text(product.description),
-                ],
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is ProductError) {
+            return Center(child: Text("Error"));
+          } else if (state is ProductLoaded) {
+            return GridView.builder(
+              itemCount: state.products.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
               ),
+              itemBuilder: (context, index) {
+                final product = state.products[index];
+                return Container(
+                  child: Column(
+                    children: [
+                      Image.network(product.imgUrl, height: 100),
+                      Text(product.name),
+                      Text("${product.price}"),
+                      Text(product.description),
+                    ],
+                  ),
+                );
+              },
             );
-          },
-        ),
+          }
+          return Container();
+        },
       ),
     );
   }

@@ -5,9 +5,9 @@ import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/category_model.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/admin_module/admin_dashboard.dart';
-import 'package:shopping_app/screen/cart_screen.dart';
+import 'package:shopping_app/screen/user_module/cart_screen.dart';
 import 'package:shopping_app/screen/login_screen.dart';
-import 'package:shopping_app/screen/product_details.dart';
+import 'package:shopping_app/screen/user_module/product_details.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, required this.role});

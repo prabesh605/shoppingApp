@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/screen/cart_screen.dart';
-import 'package:shopping_app/screen/dashboard_screen.dart';
-import 'package:shopping_app/screen/user_order_screen.dart';
+import 'package:shopping_app/screen/user_module/cart_screen.dart';
+import 'package:shopping_app/screen/user_module/dashboard_screen.dart';
+import 'package:shopping_app/screen/user_module/user_order_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key, required this.role});
