@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/bloc/cart_bloc/cart_bloc.dart';
+import 'package:shopping_app/bloc/order_bloc/order_bloc.dart';
+import 'package:shopping_app/bloc/order_bloc/order_event.dart';
+import 'package:shopping_app/bloc/order_bloc/order_state.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/order_model.dart';
 
@@ -10,20 +15,21 @@ class UserOrderScreen extends StatefulWidget {
 }
 
 class _UserOrderScreenState extends State<UserOrderScreen> {
-  FirestoreService service = FirestoreService();
-  List<OrderModel> orders = [];
+  // FirestoreService service = FirestoreService();
+  // List<OrderModel> orders = [];
   @override
   void initState() {
     super.initState();
-    getUserOrder();
+    context.read<OrderBloc>().add(GetOrder());
+    // getUserOrder();
   }
 
-  Future<void> getUserOrder() async {
-    final ord = await service.getMyOrder();
-    setState(() {
-      orders = ord;
-    });
-  }
+  // Future<void> getUserOrder() async {
+  //   final ord = await service.getMyOrder();
+  //   setState(() {
+  //     orders = ord;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -31,48 +37,73 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
       appBar: AppBar(title: Text("My Orders")),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: orders.first.items.length,
-              itemBuilder: (context, index) {
-                final item = orders.first.items[index];
+          BlocBuilder<OrderBloc, OrderState>(
+            builder: (context, state) {
+              if (state is OrderLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is OrderError) {
+                return Center(child: Text(state.error));
+              } else if (state is OrderLoaded) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: state.orders.length,
+                    itemBuilder: (context, index) {
+                      final item = state.orders[index];
 
-                return Container(
-                  margin: EdgeInsets.all(6),
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.blue.shade100,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          // Text("${item.count}"),
-                          Container(
-                            decoration: BoxDecoration(
-                              // shape: BoxShape.circle,
-                              // borderRadius: BorderRadius.circular(12),
+                      return Container(
+                        margin: EdgeInsets.all(6),
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.green),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.blue.shade100,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.status,
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            height: 100,
-                            child: Image.network(
-                              item.imgUrl,
-                              fit: BoxFit.cover,
+                            Text("${item.createdDate}"),
+                            Text("${item.totalAmount}"),
+                            Divider(),
+                            SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                itemCount: item.items.length,
+                                itemBuilder: (context, index) {
+                                  final data = item.items[index];
+                                  return ListTile(
+                                    leading: Container(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.network(
+                                        data.imgUrl,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      data.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text('${data.count}'),
+                                    trailing: Text("${data.price}"),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-
-                          SizedBox(width: 20),
-                          Text(item.name),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Text("${item.price}"),
-                    ],
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 );
-              },
-            ),
+              }
+              return Container();
+            },
           ),
         ],
       ),

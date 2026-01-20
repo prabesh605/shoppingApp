@@ -228,10 +228,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
               itemBuilder: (context, index) {
                 final product = state.products[index];
                 return Container(
+                  margin: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green),
+                  ),
                   child: Column(
                     children: [
-                      Image.network(product.imgUrl, height: 100),
-                      Text(product.name),
+                      SizedBox(
+                        height: 120,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                          child: Image.network(
+                            product.imgUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        product.name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       Text("${product.price}"),
                       Text(product.description),
                     ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/screen/admin_module/user_profile.dart';
 import 'package:shopping_app/screen/user_module/cart_screen.dart';
 import 'package:shopping_app/screen/user_module/dashboard_screen.dart';
 import 'package:shopping_app/screen/user_module/user_order_screen.dart';
@@ -17,7 +18,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     DashboardScreen(role: "user"),
     CartScreen(),
     UserOrderScreen(),
-    Center(child: Text("Profile Page")),
+    UserProfile(),
   ];
   void onItemTapped(int index) {
     setState(() {
@@ -33,7 +34,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.black,
 
-        unselectedItemColor: Colors.white,
+        // unselectedItemColor: Colors.white,
         backgroundColor: Colors.blue,
         currentIndex: selectedIndex,
         onTap: onItemTapped,

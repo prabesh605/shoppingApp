@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/bloc/cart_bloc/cart_bloc.dart';
 import 'package:shopping_app/bloc/category_bloc/category_bloc.dart';
+import 'package:shopping_app/bloc/order_bloc/order_bloc.dart';
 import 'package:shopping_app/bloc/product_bloc/product_bloc.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/screen/user_module/dashboard_screen.dart';
@@ -23,12 +25,21 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => CategoryBloc(FirestoreService())),
         BlocProvider(create: (_) => ProductBloc(FirestoreService())),
+        BlocProvider(create: (_) => CartBloc(FirestoreService())),
+        BlocProvider(create: (_) => OrderBloc(FirestoreService())),
       ],
       child: MaterialApp(
-        // theme: ThemeData(
-        //   // brightness: Brightness.dark,
-        //   // scaffoldBackgroundColor: Colors.transparent,
-        // ),
+        theme: ThemeData(
+          useMaterial3: false,
+          // useMaterial3: true,
+          // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          //   backgroundColor: Colors.blue,
+          //   selectedItemColor: Colors.black,
+          //   unselectedItemColor: Colors.white,
+          // ),
+          // brightness: Brightness.dark,
+          // scaffoldBackgroundColor: Colors.transparent,
+        ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter',
         home: SplashScreen(),

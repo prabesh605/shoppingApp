@@ -121,15 +121,29 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
               itemBuilder: (context, index) {
                 final datas = state.categories[index];
                 return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.green),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
-                      Image.network(datas.imgUrl, height: 90),
-                      Text(datas.name),
+                      Container(
+                        height: 100,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                          // borderRadius: BorderRadiusGeometry.circular(12),
+                          child: Image.network(datas.imgUrl, fit: BoxFit.cover),
+                        ),
+                      ),
+                      Text(
+                        datas.name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 );
