@@ -7,7 +7,7 @@ import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screen/admin_module/add_category_screen.dart';
 import 'package:shopping_app/screen/admin_module/add_product_screen.dart';
 import 'package:shopping_app/screen/login_screen.dart';
-import 'package:shopping_app/screen/manage_order_screen.dart';
+import 'package:shopping_app/screen/admin_module/manage_order_screen.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});

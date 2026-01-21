@@ -4,8 +4,10 @@ import 'package:shopping_app/bloc/cart_bloc/cart_bloc.dart';
 import 'package:shopping_app/bloc/order_bloc/order_bloc.dart';
 import 'package:shopping_app/bloc/order_bloc/order_event.dart';
 import 'package:shopping_app/bloc/order_bloc/order_state.dart';
+import 'package:shopping_app/constant/order_status.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/order_model.dart';
+import 'package:shopping_app/screen/user_module/order_status_screen.dart';
 
 class UserOrderScreen extends StatefulWidget {
   const UserOrderScreen({super.key});
@@ -50,52 +52,75 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
                     itemBuilder: (context, index) {
                       final item = state.orders[index];
 
-                      return Container(
-                        margin: EdgeInsets.all(6),
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green),
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.blue.shade100,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.status,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderStatusScreen(status: item.status),
                             ),
-                            Text("${item.createdDate}"),
-                            Text("${item.totalAmount}"),
-                            Divider(),
-                            SizedBox(
-                              height: 200,
-                              child: ListView.builder(
-                                itemCount: item.items.length,
-                                itemBuilder: (context, index) {
-                                  final data = item.items[index];
-                                  return ListTile(
-                                    leading: Container(
-                                      height: 60,
-                                      width: 60,
-                                      child: Image.network(
-                                        data.imgUrl,
-                                        fit: BoxFit.cover,
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(6),
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.blue.shade100,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        item.status.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    title: Text(
-                                      data.name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    subtitle: Text('${data.count}'),
-                                    trailing: Text("${data.price}"),
-                                  );
-                                },
+                                      Text("${item.createdDate}"),
+                                      Text("${item.totalAmount}"),
+                                    ],
+                                  ),
+                                  SizedBox(width: 20),
+                                ],
                               ),
-                            ),
-                          ],
+
+                              Divider(),
+                              SizedBox(
+                                height: 200,
+                                child: ListView.builder(
+                                  itemCount: item.items.length,
+                                  itemBuilder: (context, index) {
+                                    final data = item.items[index];
+                                    return ListTile(
+                                      leading: Container(
+                                        height: 60,
+                                        width: 60,
+                                        child: Image.network(
+                                          data.imgUrl,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        data.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text('${data.count}'),
+                                      trailing: Text("${data.price}"),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -9,3 +9,5 @@ class AddOrder extends OrderEvent {
   final OrderModel order;
   AddOrder(this.order);
 }
+
+class GetAllOrder extends OrderEvent {}

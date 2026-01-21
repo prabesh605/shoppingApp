@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopping_app/constant/order_status.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/order_model.dart';
@@ -207,7 +208,7 @@ class _CartScreenState extends State<CartScreen> {
                 userId: "$userId",
                 email: "$userEmail",
                 totalAmount: totalAmount,
-                status: "Pending",
+                status: OrderStatus.pending,
                 createdDate: DateTime.now(),
                 items: carts,
               );

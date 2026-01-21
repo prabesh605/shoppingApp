@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/constant/order_status.dart';
 import 'package:shopping_app/firebase/firestore_service.dart';
 import 'package:shopping_app/model/cart_model.dart';
 import 'package:shopping_app/model/order_model.dart';
@@ -13,6 +14,7 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   FirestoreService service = FirestoreService();
+  bool isClicked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,27 +23,39 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              final order = OrderModel(
-                id: widget.orders.id,
-                userId: widget.orders.userId,
-                email: widget.orders.email,
-                totalAmount: widget.orders.totalAmount,
-                status: "Complete",
-                createdDate: widget.orders.createdDate,
-                items: widget.orders.items,
-              );
-              service.updateOrder(order);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Order updated"),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              if (isClicked == false) {
+                final order = OrderModel(
+                  id: widget.orders.id,
+                  userId: widget.orders.userId,
+                  email: widget.orders.email,
+                  totalAmount: widget.orders.totalAmount,
+                  status: getNextStatus(widget.orders.status),
+                  createdDate: widget.orders.createdDate,
+                  items: widget.orders.items,
+                );
+                service.updateOrder(order);
+                isClicked = true;
+                Navigator.pop(context, true);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Order updated"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("You clicked multiple times"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+
               // widget.orders.status;
             },
             child: Text("Update"),
           ),
-          SizedBox(width: 10),
+          // SizedBox(width: 10),
         ],
       ),
       body: ListView.builder(

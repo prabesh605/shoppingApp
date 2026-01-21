@@ -120,7 +120,7 @@ class FirestoreService {
     }
   }
 
-  Future<List<OrderModel>> getOrder() async {
+  Future<List<OrderModel>> getAllOrder() async {
     try {
       final data = await orderCollection.get();
       final orders = data.docs.map((e) => OrderModel.fromJson(e)).toList();

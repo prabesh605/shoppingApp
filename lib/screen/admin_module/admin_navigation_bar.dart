@@ -3,7 +3,7 @@ import 'package:shopping_app/screen/admin_module/admin_dashboard.dart';
 import 'package:shopping_app/screen/admin_module/user_profile.dart';
 import 'package:shopping_app/screen/user_module/cart_screen.dart';
 import 'package:shopping_app/screen/user_module/dashboard_screen.dart';
-import 'package:shopping_app/screen/manage_order_screen.dart';
+import 'package:shopping_app/screen/admin_module/manage_order_screen.dart';
 import 'package:shopping_app/screen/user_module/user_order_screen.dart';
 
 class AdminNavigationBar extends StatefulWidget {

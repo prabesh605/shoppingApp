@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopping_app/constant/order_status.dart';
 import 'package:shopping_app/model/cart_model.dart';
+import 'package:shopping_app/utils/order_status_helper.dart';
 
 class OrderModel {
   final String id;
   final String userId;
   final String email;
   final double totalAmount;
-  final String status;
+  final OrderStatus status;
   final DateTime createdDate;
   final List<CartModel> items;
 
@@ -26,7 +28,7 @@ class OrderModel {
       userId: data['userId'],
       email: data['email'],
       totalAmount: (data['totalAmount'] as num).toDouble(),
-      status: data['status'],
+      status: OrderStatusHelper.fromString(data['status']),
       createdDate: (data['createdAt'] as Timestamp).toDate(),
       items: (doc['items'] as List)
           .map((e) => CartModel.fromJson(e, id: doc.id))
@@ -39,7 +41,7 @@ class OrderModel {
       'userId': userId,
       'email': email,
       'totalAmount': totalAmount,
-      'status': status,
+      'status': OrderStatusHelper.toStringValue(status),
       'createdAt': Timestamp.fromDate(createdDate),
       'items': items.map((e) => e.toJson()).toList(),
     };

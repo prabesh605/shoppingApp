@@ -32,9 +32,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
       // backgroundColor: Colors.red,
       body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
 
-        // unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
         backgroundColor: Colors.blue,
         currentIndex: selectedIndex,
         onTap: onItemTapped,
@@ -43,7 +44,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.white),
             label: "Home",
-            backgroundColor: Colors.blue,
+            // backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart, color: Colors.white),
